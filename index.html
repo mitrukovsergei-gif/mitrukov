@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Курс обучения монтажника интернет-провайдера</title>
+<meta name="theme-color" content="#2563eb">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Монтажник">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#2563eb;--primary-dark:#1e40af;--green:#16a34a;--green-light:#dcfce7;--red:#dc2626;--red-light:#fee2e2;--gray:#f3f4f6;--gray-dark:#6b7280;--orange:#f59e0b;--bg:#f0f4f8;--card:#ffffff;--text:#1f2937;--border:#e5e7eb}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
+#app{max-width:1100px;margin:0 auto;padding:16px}
+.screen{display:none;animation:fadeIn .4s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.header{background:linear-gradient(135deg,#1e40af,#2563eb);color:#fff;border-radius:16px;padding:28px 32px;margin-bottom:20px;box-shadow:0 4px 20px rgba(37,99,235,.25)}
+.header h1{font-size:1.6rem;margin-bottom:6px}
+.header p{opacity:.9;font-size:.95rem}
+.progress-bar-wrap{background:rgba(255,255,255,.2);border-radius:20px;height:10px;margin-top:14px;overflow:hidden}
+.progress-bar{background:#fff;height:100%;border-radius:20px;transition:width .5s ease;width:0%}
+.progress-text{font-size:.85rem;margin-top:6px;opacity:.9}
+.reg-card{background:var(--card);border-radius:16px;padding:40px;box-shadow:0 2px 12px rgba(0,0,0,.08);max-width:500px;margin:40px auto}
+.reg-card h2{text-align:center;margin-bottom:8px;font-size:1.5rem}
+.reg-card .sub{text-align:center;color:var(--gray-dark);margin-bottom:28px}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;font-weight:600;margin-bottom:6px;font-size:.9rem}
+.form-group input{width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:10px;font-size:1rem;transition:border-color .2s;background:#fff}
+.form-group input:focus{outline:none;border-color:var(--primary)}
+.btn{display:inline-block;padding:12px 28px;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-primary:active{transform:scale(.98)}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:#15803d}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-outline{background:transparent;border:2px solid var(--border);color:var(--text)}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary)}
+.btn-big{width:100%;padding:14px;font-size:1.1rem;margin-top:10px}
+.modules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:20px}
+.module-card{background:var(--card);border-radius:14px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.06);cursor:pointer;transition:all .2s;border:2px solid transparent;position:relative}
+.module-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.1)}
+.module-card.locked{cursor:not-allowed;opacity:.6}
+.module-card.locked:hover{transform:none;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.module-card.completed{border-color:var(--green)}
+.module-card.available{border-color:var(--primary)}
+.module-card .mod-num{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--gray);font-weight:700;font-size:.9rem;margin-bottom:10px}
+.module-card.completed .mod-num{background:var(--green);color:#fff}
+.module-card.available .mod-num{background:var(--primary);color:#fff}
+.module-card .mod-title{font-weight:700;font-size:1rem;margin-bottom:6px}
+.module-card .mod-info{font-size:.82rem;color:var(--gray-dark)}
+.module-card .lock-icon{position:absolute;top:16px;right:16px;font-size:1.2rem}
+.module-card .check-icon{position:absolute;top:16px;right:16px;color:var(--green);font-size:1.2rem}
+.stats-row{display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.stat-card{flex:1;min-width:140px;background:var(--card);border-radius:12px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.stat-card .stat-val{font-size:1.8rem;font-weight:800;color:var(--primary)}
+.stat-card .stat-label{font-size:.8rem;color:var(--gray-dark);margin-top:4px}
+.module-header{background:var(--card);border-radius:14px;padding:24px 28px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.module-header .badge{display:inline-block;background:var(--primary);color:#fff;padding:4px 14px;border-radius:20px;font-size:.8rem;font-weight:600;margin-bottom:8px}
+.module-header h2{font-size:1.4rem;margin-bottom:4px}
+.module-header .mod-meta{font-size:.85rem;color:var(--gray-dark)}
+.content-section{background:var(--card);border-radius:14px;padding:28px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.content-section h3{font-size:1.15rem;color:var(--primary-dark);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--border)}
+.content-section h4{font-size:1rem;margin:16px 0 8px;color:var(--text)}
+.content-section p{margin-bottom:12px}
+.content-section ul{margin:0 0 12px 20px}
+.content-section li{margin-bottom:6px}
+.content-section strong{color:var(--primary-dark)}
+.info-box{background:#eff6ff;border-left:4px solid var(--primary);padding:14px 18px;border-radius:8px;margin:14px 0}
+.warning-box{background:#fffbeb;border-left:4px solid var(--orange);padding:14px 18px;border-radius:8px;margin:14px 0}
+.tip-box{background:var(--green-light);border-left:4px solid var(--green);padding:14px 18px;border-radius:8px;margin:14px 0}
+.content-section table{width:100%;border-collapse:collapse;margin:14px 0}
+.content-section table th,.content-section table td{border:1px solid var(--border);padding:8px 12px;text-align:left;font-size:.9rem}
+.content-section table th{background:var(--gray);font-weight:600}
+.test-container{background:var(--card);border-radius:14px;padding:28px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.test-container h3{font-size:1.2rem;margin-bottom:6px}
+.test-container .test-meta{font-size:.85rem;color:var(--gray-dark);margin-bottom:20px}
+.question{margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+.question:last-child{border-bottom:none}
+.question .q-text{font-weight:600;margin-bottom:12px;font-size:1rem}
+.question .q-num{color:var(--primary);font-weight:800;margin-right:4px}
+.answers{display:flex;flex-direction:column;gap:8px}
+.answer-option{display:flex;align-items:center;gap:10px;padding:10px 14px;border:2px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s}
+.answer-option:hover{border-color:var(--primary);background:#eff6ff}
+.answer-option.selected{border-color:var(--primary);background:#eff6ff}
+.answer-option.correct{border-color:var(--green);background:var(--green-light)}
+.answer-option.incorrect{border-color:var(--red);background:var(--red-light)}
+.answer-option.disabled{cursor:default}
+.answer-option.disabled:hover{border-color:inherit;background:inherit}
+.answer-option .opt-letter{font-weight:700;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--gray);font-size:.85rem;flex-shrink:0}
+.answer-option.correct .opt-letter{background:var(--green);color:#fff}
+.answer-option.incorrect .opt-letter{background:var(--red);color:#fff}
+.answer-option.selected .opt-letter{background:var(--primary);color:#fff}
+.answer-option .opt-text{flex:1}
+.test-result{text-align:center;padding:30px;border-radius:14px;margin-top:20px}
+.test-result.passed{background:var(--green-light);border:2px solid var(--green)}
+.test-result.failed{background:var(--red-light);border:2px solid var(--red)}
+.test-result .score{font-size:2rem;font-weight:800;margin-bottom:8px}
+.test-result .verdict{font-size:1.2rem;font-weight:700;margin-bottom:16px}
+.test-result.passed .verdict{color:var(--green)}
+.test-result.failed .verdict{color:var(--red)}
+.test-actions{display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+.nav-buttons{display:flex;justify-content:space-between;align-items:center;margin:20px 0;flex-wrap:wrap;gap:10px}
+.certificate-screen{max-width:850px;margin:0 auto}
+.certificate{background:linear-gradient(135deg,#fefefe,#f8fafc);border:8px double var(--primary);border-radius:16px;padding:50px;text-align:center;box-shadow:0 4px 30px rgba(0,0,0,.12);position:relative;min-height:520px}
+.certificate .seal{position:absolute;top:30px;right:30px;width:90px;height:90px;border:3px solid var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--primary);transform:rotate(-15deg);line-height:1.3}
+.certificate .cert-title{font-size:1rem;color:var(--gray-dark);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.certificate h2{font-size:2rem;color:var(--primary-dark);margin-bottom:30px}
+.certificate .cert-body{font-size:1.1rem;margin-bottom:30px;line-height:2}
+.certificate .cert-name{font-size:2rem;font-weight:800;color:var(--text);margin:20px 0;border-bottom:2px solid var(--primary);display:inline-block;padding-bottom:4px}
+.certificate .cert-course{font-size:1.3rem;font-weight:600;color:var(--primary-dark);margin:10px 0}
+.certificate .cert-score{font-size:1rem;color:var(--gray-dark);margin:16px 0}
+.certificate .cert-date{font-size:1rem;color:var(--gray-dark)}
+.certificate .signatures{display:flex;justify-content:space-around;margin-top:50px;flex-wrap:wrap;gap:30px}
+.certificate .sig-block{text-align:center}
+.certificate .sig-line{border-top:1px solid var(--gray-dark);width:200px;margin-bottom:6px}
+.certificate .sig-label{font-size:.85rem;color:var(--gray-dark)}
+.cert-actions{display:flex;gap:16px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+.install-banner{background:var(--green-light);border:2px solid var(--green);border-radius:12px;padding:16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;justify-content:center}
+.install-banner button{white-space:nowrap}
+@media(max-width:640px){
+.header{padding:20px}.header h1{font-size:1.2rem}
+.modules-grid{grid-template-columns:1fr}
+.content-section,.test-container,.module-header{padding:20px 16px}
+.certificate{padding:30px 16px}.certificate h2{font-size:1.4rem}.certificate .cert-name{font-size:1.4rem}
+.certificate .seal{width:60px;height:60px;font-size:.55rem;top:16px;right:16px}
+}
+@media print{
+.header,.nav-buttons,.cert-actions,.module-header,.content-section,.test-container,.stats-row,.modules-grid,.install-banner{display:none!important}
+.certificate-screen{display:block!important}
+.certificate{border:8px double #2563eb;box-shadow:none;page-break-inside:avoid}
+body{background:#fff}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const MODULES = [
+{
+ num:1,
+ title:"Охрана труда и безопасность при работах на высоте",
+ theory:2, practice:2,
+ content:`
+<h3>Вводный инструктаж и инструктаж на рабочем месте</h3>
+<p>Вводный инструктаж проводится при приёме на работу. Инструктаж на рабочем месте проводит непосредственный руководитель или назначенное лицо. Повторный инструктаж — не реже одного раза в 6 месяцев.</p>
+<h3>Электробезопасность</h3>
+<ul>
+<li>Опасные факторы при работе с линиями связи: наведённое напряжение, зоны поражения электрическим током</li>
+<li>Опасным считается напряжение 42 В переменного тока и выше</li>
+<li>При работе вблизи ЛЭП необходимо согласование и наряд-допуск</li>
+</ul>
+<h3>Работа на высоте</h3>
+<ul>
+<li>Страховочная привязь обязательна при работе на высоте более 1,8 м</li>
+<li>Лестницы и стремянки: проверка перед использованием, правильная установка (угол ~75°), фиксация</li>
+<li>Подъём на опоры и крыши частных домов — только со страховкой и после проверки точки крепления</li>
+<li>Запрещена работа на высоте в гололёд, при сильном ветре, грозе</li>
+</ul>
+<div class="warning-box"><strong>Внимание!</strong> Перед использованием страховочной привязи проверить: целостность лямок, карабинов, сроки сертификации.</div>
+<h3>Пожарная безопасность</h3>
+<ul>
+<li>Правила работы с паяльником, горелкой для термоусадки, бензоинструментом</li>
+<li>Огнетушитель в автомобиле, проверка сроков</li>
+</ul>
+<h3>Оказание первой помощи</h3>
+<ul>
+<li>Ожоги, поражение током, падение с высоты</li>
+<li>Экстренные службы — 112</li>
+<li>При поражении током: обесточить источник → вызвать скорую → начать СЛР</li>
+</ul>
+<h3>СИЗ монтажника</h3>
+<table>
+<tr><th>СИЗ</th><th>Назначение</th><th>Срок</th></tr>
+<tr><td>Каска</td><td>Защита головы на высоте и под опорами</td><td>5 лет</td></tr>
+<tr><td>Страховочная привязь</td><td>Работа на высоте более 1,8 м</td><td>1 год (по графику)</td></tr>
+<tr><td>Перчатки х/б</td><td>Общие работы</td><td>По износу</td></tr>
+<tr><td>Перчатки диэлектрические</td><td>Работа с электроустановками</td><td>По графику проверки</td></tr>
+<tr><td>Перчатки нитриловые</td><td>Сварка оптики</td><td>По износу</td></tr>
+<tr><td>Защитные очки</td><td>Сварка, скалывание, сверление</td><td>По износу</td></tr>
+</table>
+<h4>Рабочая форма</h4>
+<div class="info-box">
+<strong>Утеплённый сигнальный костюм</strong> — жилет оранжевый/зелёный со светоотражающими полосами, для работы на улице и на высоте.<br>
+<strong>Летний комплект</strong> — фирменное поло/футболка + брюки с усилением на коленях.<br>
+<strong>Сменная обувь или бахилы</strong> — для входа в дом абонента.<br>
+<strong>Зимняя обувь</strong> с нескользящей подошвой — для работы на высоте в холодный период.<br>
+<strong>Форма должна быть чистой и опрятной</strong> — монтажник представитель компании в доме абонента.
+</div>
+<h3>Работа в зимний период и при повышенной температуре</h3>
+<p>Ограничения при гололёде, сильном ветре, грозе. Регулярные перерывы, обеспечение водой в жару.</p>
+`,
+ pass:80,
+ questions:[
+  {q:"Кто проводит первичный инструктаж на рабочем месте?",a:["Сотрудник кадровой службы","Непосредственный руководитель или назначенное лицо","Сам работник по инструкции","Инженер по охране труда предприятия"],c:1},
+  {q:"Какое напряжение считается опасным для жизни человека?",a:["12 В","36 В","42 В переменного тока и выше","220 В только постоянного тока"],c:2},
+  {q:"При какой высоте работы обязательно применение страховочной привязи?",a:["Более 1 м","Более 1,8 м","Более 2,5 м","Более 3 м"],c:1},
+  {q:"Какой номер телефона для вызова экстренных служб с мобильного?",a:["02","103","112","01"],c:2},
+  {q:"Что НЕ относится к средствам индивидуальной защиты монтажника?",a:["Каска","Страховочная привязь","Перфоратор","Диэлектрические перчатки"],c:2},
+  {q:"Как часто проводится повторный инструктаж по охране труда?",a:["Ежемесячно","Не реже одного раза в 6 месяцев","Один раз в год","Только при переводе на другую работу"],c:1},
+  {q:"Что делать при поражении коллеги электрическим током?",a:["Немедленно коснуться пострадавшего","Обесточить источник, вызвать скорую, начать СЛР","Дать попить воды","Уйти за помощью и не возвращаться"],c:1},
+  {q:"Разрешается ли работать на высоте в гололёд и при сильном ветре?",a:["Да, всегда","Да, при наличии страховки","Нет, работы запрещены","Только при температуре выше 0°C"],c:2},
+  {q:"Что входит в рабочую форму монтажника для работы в частном секторе?",a:["Любая удобная одежда","Сигнальный жилет со светоотражающими полосами, фирменная одежда, сменная обувь","Только каска и перчатки","Спортивный костюм"],c:1},
+  {q:"Что должно быть проверено перед использованием страховочной привязи?",a:["Только цвет","Целостность лямок, карабинов, сроки сертификации","Цена в магазине","Размер этикетки"],c:1}
+ ]
+},
+{
+ num:2,
+ title:"Технологии доступа: PON, GPON, Ethernet",
+ theory:2, practice:1,
+ content:`
+<h3>Архитектура сети провайдера</h3>
+<p>Ядро → Агрегация → Доступ. Монтажник работает на уровне доступа — «последняя миля» от опоры до дома абонента.</p>
+<h3>Технология PON (Passive Optical Network)</h3>
+<ul>
+<li>Дерево из оптического кабеля: OLT → сплиттеры → ONT</li>
+<li>WDM — разделение по длинам волн: <strong>1490 нм</strong> — нисходящий (downstream), <strong>1310 нм</strong> — восходящий (upstream), <strong>1550 нм</strong> — видео</li>
+<li>Сплиттер — пассивный делитель, не требует питания</li>
+</ul>
+<h3>GPON vs EPON</h3>
+<table>
+<tr><th>Параметр</th><th>GPON</th><th>EPON</th></tr>
+<tr><td>Скорость downstream</td><td>2.5 Гбит/с</td><td>1.25 Гбит/с</td></tr>
+<tr><td>Скорость upstream</td><td>1.25 Гбит/с</td><td>1.25 Гбит/с</td></tr>
+<tr><td>Коэффициент сплитирования</td><td>до 1:128</td><td>до 1:64</td></tr>
+</table>
+<h3>Ethernet</h3>
+<ul>
+<li>Витая пара Cat 5e / 6 / 6a, максимальная длина сегмента — 100 м</li>
+<li>VLAN, порты доступа, коммутация</li>
+<li>Cat 5e обеспечивает скорость до 1 Гбит/с на 100 м</li>
+</ul>
+<h3>FTTH / FTTN</h3>
+<p>В частном секторе — преимущественно <strong>FTTH</strong> (Fiber To The Home) — оптика до дома абонента.</p>
+<h3>Типовые схемы подключения в частном секторе</h3>
+<div class="info-box">
+<strong>Одиночный дом:</strong> оптический дроп-кабель от опоры → ONT внутри помещения → роутер по витой паре.<br>
+<strong>Несколько зданий на участке (дом + баня + гараж):</strong> распределение через дополнительный сплиттер или коммутатор.
+</div>
+<h3>Оптический бюджет мощности</h3>
+<p>Затухание на элементах линии: сварной стык — 0,01–0,05 дБ, сплиттер 1:64 — ~20 дБ, коннектор — 0,1–0,3 дБ.</p>
+`,
+ pass:75,
+ questions:[
+  {q:"Что означает аббревиатура PON?",a:["Power Optical Network","Passive Optical Network","Personal Optical Node","Protected Optical Network"],c:1},
+  {q:"На какой длине волны передаётся сигнал от OLT к ONT (downstream)?",a:["1310 нм","1490 нм","1550 нм","850 нм"],c:1},
+  {q:"Какое максимальное расстояние сегмента Ethernet по витой паре?",a:["50 м","100 м","150 м","300 м"],c:1},
+  {q:"Что такое сплиттер в PON-сети?",a:["Активный усилитель сигнала","Пассивный делитель оптического сигнала на несколько направлений","Коммутатор Ethernet","Источник питания"],c:1},
+  {q:"Что означает FTTH?",a:["Fiber To The Home — оптика до дома абонента","Fiber To The Hub — оптика до узла","Fast Transfer To Host","Full Transfer To House"],c:0},
+  {q:"Какое затухание вносит типичный сварной стык оптического кабеля?",a:["0,01–0,05 дБ","0,5–1 дБ","3–5 дБ","10 дБ"],c:0},
+  {q:"Сколько абонентов может подключаться к одному порту OLT при коэффициенте сплитирования 1:64?",a:["16","32","64","128"],c:2},
+  {q:"Какая категория витой пары обеспечивает скорость до 1 Гбит/с на расстоянии 100 м?",a:["Cat 5","Cat 5e","Cat 3","Cat 6a"],c:1}
+ ]
+},
+{
+ num:3,
+ title:"Оптический кабель: сварка и коннекторы",
+ theory:2, practice:8,
+ content:`
+<h3>Типы оптического кабеля</h3>
+<p><strong>Одномодовый (SM)</strong> — диаметр сердцевины 9 мкм, дальняя передача. <strong>Многомодовый (MM)</strong> — 50/62.5 мкм, короткие дистанции. В PON используется только одномодовый.</p>
+<h3>Подготовка кабеля к сварке</h3>
+<ol>
+<li>Снятие оболочки стриппером</li>
+<li>Разделка модулей по цветам</li>
+<li>Очистка от гидрофоба безворсовой салфеткой со спиртом</li>
+<li>Скалывание волокна скалывателем (cleaver)</li>
+</ol>
+<div class="warning-box"><strong>Важно!</strong> После скалывания торец волокна необходимо протереть безворсовой салфеткой со спиртом. Нельзя трогать торец пальцами!</div>
+<h3>Процесс сварки</h3>
+<ol>
+<li>Установка волокон в сварочный аппарат</li>
+<li>Оценка качества сварки (аппарат показывает оценку)</li>
+<li>Защита сварного соединения гильзой КДЗС</li>
+<li>Термоусадка гильзы в splice-кассете</li>
+</ol>
+<h3>Типы коннекторов</h3>
+<table>
+<tr><th>Коннектор</th><th>Цвет</th><th>Особенность</th></tr>
+<tr><td>SC/APC</td><td>Зелёный</td><td>Угол полировки 8°, меньше отражений</td></tr>
+<tr><td>SC/UPC</td><td>Синий</td><td>Плоская полировка</td></tr>
+<tr><td>LC</td><td>—</td><td>Малый форм-фактор</td></tr>
+<tr><td>FC</td><td>—</td><td>Резьбовое соединение</td></tr>
+</table>
+<h3>Быстрые коннекторы (FAST connector) и механические сплайсы</h3>
+<p>Применяются для быстрого подключения без сварки. Затухание механического сплайса — 0,1–0,3 дБ.</p>
+<h3>Правила обращения с оптикой</h3>
+<div class="tip-box">
+Минимальный радиус изгиба — 30 мм и более (обычно 10× диаметр кабеля).<br>
+Не гнуть, не наступать, защита торца заглушкой.
+</div>
+`,
+ pass:80,
+ questions:[
+  {q:"Какой цвет имеет коннектор типа SC/APC?",a:["Синий","Зелёный","Бежевый","Красный"],c:1},
+  {q:"Чем отличается одномодовое волокно от многомодового?",a:["Диаметром сердцевины и дальностью передачи","Цветом оболочки","Типом разъёма","Ничем не отличается"],c:0},
+  {q:"Какой инструмент используется для скалывания оптического волокна?",a:["Стриппер","Скалыватель (cleaver)","Кримпер","Мультиметр"],c:1},
+  {q:"Что необходимо сделать с торцом волокна после скалывания перед сваркой?",a:["Ничего, сразу варить","Протереть безворсовой салфеткой со спиртом","Промыть водой","Просушить феном"],c:1},
+  {q:"Что такое гильза КДЗС?",a:["Источник оптического сигнала","Защитная трубка для сварного соединения","Тип коннектора","Инструмент для разделки кабеля"],c:1},
+  {q:"Какое типичное затухание вносит механический сплайс?",a:["0,01 дБ","0,1–0,3 дБ","1–2 дБ","5 дБ"],c:1},
+  {q:"Какой минимальный радиус изгиба оптического дроп-кабеля при монтаже?",a:["5 мм","10 мм","30 мм и более (обычно 10× диаметр кабеля)","Изгибать нельзя вообще"],c:2},
+  {q:"Что НЕЛЬЗЯ делать с оптическим коннектором?",a:["Снимать заглушку перед подключением","Трогать торец пальцами","Подключать к ONT","Протирать спиртом"],c:1}
+ ]
+},
+{
+ num:4,
+ title:"Медный кабель (витая пара): обжим и прокладка",
+ theory:2, practice:2,
+ content:`
+<h3>Витая пара UTP / FTP / STP</h3>
+<ul>
+<li><strong>UTP</strong> — без экрана, <strong>FTP</strong> — с общим фольговым экраном, <strong>STP</strong> — с экраном на каждой паре</li>
+<li>Категории: 5e (до 1 Гбит/с, 100 МГц), 6 (до 10 Гбит/с на 55 м, 250 МГц), 6a (до 10 Гбит/с на 100 м, 500 МГц)</li>
+</ul>
+<h3>Стандарты обжима T568A и T568B</h3>
+<table>
+<tr><th>Контакт</th><th>T568B</th><th>T568A</th></tr>
+<tr><td>1</td><td>Бело-оранжевый</td><td>Бело-зелёный</td></tr>
+<tr><td>2</td><td>Оранжевый</td><td>Зелёный</td></tr>
+<tr><td>3</td><td>Бело-зелёный</td><td>Бело-оранжевый</td></tr>
+<tr><td>4</td><td>Синий</td><td>Синий</td></tr>
+<tr><td>5</td><td>Бело-синий</td><td>Бело-синий</td></tr>
+<tr><td>6</td><td>Зелёный</td><td>Оранжевый</td></tr>
+<tr><td>7</td><td>Бело-коричневый</td><td>Бело-коричневый</td></tr>
+<tr><td>8</td><td>Коричневый</td><td>Коричневый</td></tr>
+</table>
+<p>В России чаще используется <strong>T568B</strong>.</p>
+<h3>Инструменты</h3>
+<ul>
+<li>Кримпер (обжимные клещи) — для RJ-45</li>
+<li>Стриппер — для снятия оболочки</li>
+<li>Тестер кабеля — проверка целостности и схемы</li>
+</ul>
+<h3>Типичные проблемы</h3>
+<div class="warning-box">Обрыв, короткое замыкание, расщепление пар, превышение длины (более 100 м), влияние помех от силового кабеля.</div>
+`,
+ pass:80,
+ questions:[
+  {q:"Сколько пар (проводников) в кабеле витой пары категории 5e стандартной конфигурации?",a:["2 пары (4 проводника)","4 пары (8 проводников)","6 пар (12 проводников)","8 пар (16 проводников)"],c:1},
+  {q:"Какая цветовая пара стоит на контактах 1–2 коннектора RJ-45 по стандарту T568B?",a:["Оранжево-белая","Зелёно-белая","Сине-белая","Коричнево-белая"],c:0},
+  {q:"Какой стандарт обжима чаще используется в России для прямых кабелей?",a:["T568A","T568B","T568C","T568D"],c:1},
+  {q:"Что показывает тестер витой пары при расщеплении пар?",a:["Всё нормально","Короткое замыкание","Неправильный порядок проводников / пары разнесены","Обрыв на всех парах"],c:2},
+  {q:"Максимальная длина сегмента Ethernet по витой паре без репитера — это:",a:["100 м","200 м","500 м","1000 м"],c:0},
+  {q:"В чём отличие UTP от FTP кабеля?",a:["UTP — без экрана, FTP — с общим фольговым экраном","UTP — для улицы, FTP — для помещения","Нет отличия","UTP — медь, FTP — алюминий"],c:0},
+  {q:"Что произойдёт, если обжать кабель по разным стандартам (T568A с одной стороны, T568B с другой)?",a:["Кабель не будет работать","Получится кроссовый (crossover) кабель","Кабель будет работать медленнее","Ничего не изменится"],c:1},
+  {q:"Какой инструмент используется для обжима коннектора RJ-45?",a:["Кримпер (обжимные клещи)","Паяльник","Мультиметр","Сварочный аппарат"],c:0}
+ ]
+},
+{
+ num:5,
+ title:"Абонентское оборудование: ONT, роутеры, ТВ-приставки",
+ theory:4, practice:3,
+ content:`
+<h3>ONT (Optical Network Terminal)</h3>
+<p>Оптический терминал на стороне абонента. Порты: POTS, Ethernet, Wi-Fi, CATV.</p>
+<p><strong>Регистрация ONT на OLT:</strong> по серийному номеру (SN).</p>
+<h3>Домашний роутер (Wi-Fi)</h3>
+<ul>
+<li>WAN-порт — подключение от провайдера, LAN — локальные порты</li>
+<li>Wi-Fi: 2,4 ГГц (больше радиус, меньше скорость) и 5 ГГц (больше скорость, меньше радиус)</li>
+<li>Типы подключения: PPPoE, IPoE/DHCP, статический IP</li>
+</ul>
+<h3>Настройка Wi-Fi в частном доме</h3>
+<div class="tip-box"><strong>Расширение покрытия:</strong> Wi-Fi-репитер для небольших домов, Mesh-система для больших многоэтажных домов.</div>
+<h3>IPTV</h3>
+<p>Подключение ТВ-приставки, multicast, VLAN для IPTV.</p>
+<h3>Сброс и восстановление</h3>
+<p>Сброс кнопкой Reset до заводских настроек, обновление прошивки.</p>
+`,
+ pass:75,
+ questions:[
+  {q:"Что такое ONT?",a:["Оптический терминал на стороне абонента","Коммутатор в ядре сети","Тип кабеля","Программа настройки роутера"],c:0},
+  {q:"По какому параметру ONT регистрируется на OLT?",a:["По IP-адресу","По серийному номеру (SN)","По MAC-адресу роутера","По номеру договора"],c:1},
+  {q:"Какой тип подключения чаще всего используется для абонентских роутеров?",a:["Статический IP на WAN","PPPoE","L2TP","IPsec"],c:1},
+  {q:"Какая частота Wi-Fi обеспечивает большую скорость, но меньший радиус действия?",a:["2,4 ГГц","5 ГГц","Обе одинаково","900 МГц"],c:1},
+  {q:"Что нужно сделать, если забыт пароль администратора роутера?",a:["Вызвать провайдера","Сбросить роутер кнопкой Reset до заводских настроек","Купить новый роутер","Подобрать пароль перебором"],c:1},
+  {q:"Что такое multicast в контексте IPTV?",a:["Одиночная передача потока каждому абоненту","Групповая передача одного потока группе абонентов","Запись видеоархива","Шифрование каналов"],c:1},
+  {q:"Какой порт на роутере используется для подключения восходящего канала (от провайдера)?",a:["LAN1","WAN","USB","Любой"],c:1},
+  {q:"Какой стандарт шифрования Wi-Fi считается наиболее актуальным на сегодня?",a:["WEP","WPA","WPA2","WPA3"],c:3}
+ ]
+},
+{
+ num:6,
+ title:"Монтаж и крепление кабеля. Работа на высоте в частном секторе",
+ theory:2, practice:3,
+ content:`
+<h3>Способы прокладки в частном секторе</h3>
+<ul>
+<li><strong>По фасаду</strong> — клипсы, скобы</li>
+<li><strong>В кабель-канале</strong> — пластиковый короб</li>
+<li><strong>Воздушная прокладка</strong> — самонесущий кабель от опоры до дома по тросу</li>
+<li><strong>В гофре / трубе</strong> — защита от механических повреждений</li>
+</ul>
+<h3>Крепёж</h3>
+<table>
+<tr><th>Материал стены</th><th>Рекомендуемый крепёж</th></tr>
+<tr><td>Дерево</td><td>Гвоздевые скобы, саморезы</td></tr>
+<tr><td>Кирпич / бетон</td><td>Дюбель-хомут, клипса на саморезе с дюбелем</td></tr>
+<tr><td>Газобетон</td><td>Специальные дюбели</td></tr>
+<tr><td>Сайдинг</td><td>Специальные крепления, не деформирующие панели</td></tr>
+</table>
+<h3>Воздушная прокладка самонесущего кабеля</h3>
+<div class="info-box">
+Натяжение с помощью анкерных зажимов. Провес — обязателен. <strong>Нельзя перегибать кабель через острые углы!</strong>
+</div>
+<h3>Работа на крыше частного дома</h3>
+<div class="warning-box">
+<strong>Требования:</strong> согласование с абонентом, страховочная привязь, крепление к несущим элементам крыши.
+</div>
+<h3>Прохождение стены частного дома</h3>
+<p>Сверление → установка проходной гильзы → уплотнение. Учёт теплоизоляции и пароизоляции.</p>
+<h3>Распределительная коробка на участке</h3>
+<p>Укладка в органайзер, маркировка, запас кабеля 1–2 м.</p>
+<div class="tip-box">Клипсы для оптики — широкие (не пережимающие кабель), расстояние между клипсами 30–50 см.</div>
+`,
+ pass:75,
+ questions:[
+  {q:"Какое рекомендуемое расстояние между клипсами при креплении оптического дроп-кабеля на стене?",a:["10–15 см","30–50 см","1–2 м","Не регламентируется"],c:1},
+  {q:"Какой крепёж подходит для кирпичной стены частного дома?",a:["Гвоздевая скоба","Дюбель-хомут или клипса на саморезе с дюбелем","Двухсторонний скотч","Стяжка без крепления"],c:1},
+  {q:"Что НЕЛЬЗЯ делать при воздушной прокладке самонесущего кабеля от опоры до дома?",a:["Использовать анкерный зажим","Перегибать кабель через острые углы","Натягивать кабель","Оставлять провес"],c:1},
+  {q:"Что нужно сделать при прохождении кабеля через стену частного дома?",a:["Просто просверлить и продеть","Установить проходную гильзу и уплотнить","Замазать цементом без гильзы","Оставить открытое отверстие"],c:1},
+  {q:"Можно ли прокладывать оптический и силовой кабель в одном кабель-канале?",a:["Да, без ограничений","Нет, раздельные трассы или перегородка","Да, если кабель силовой до 36 В","Только в гофре"],c:1},
+  {q:"Какой инструмент используется для сверления отверстий в кирпиче?",a:["Дрель","Перфоратор с буром","Шуруповёрт","Отвёртка"],c:1},
+  {q:"Что делать, если абонент просит проложить кабель нестандартно (за обшивкой, через чердак)?",a:["Сделать как просит, без обсуждения","Обсудить риски, предложить альтернативу, согласовать с руководителем","Отказать и уйти","Проложить и не сообщать"],c:1},
+  {q:"Какой запас кабеля нужно оставлять у распределительной коробки на участке?",a:["10 см","50 см","1–2 м (для возможных переподключений)","Запас не нужен"],c:2}
+ ]
+},
+{
+ num:7,
+ title:"Измерения и диагностика оптических линий",
+ theory:2, practice:2,
+ content:`
+<h3>Оптический тестер (Power Meter)</h3>
+<p>Измерение уровня мощности на приёме. Нормативные значения для GPON: от −8 до −28 дБм на ONT.</p>
+<h3>Визуальный локатор дефектов (VFL)</h3>
+<p>Красный лазер для поиска макроизгибов и обрывов на коротких дистанциях.</p>
+<h3>Рефлектометр (OTDR)</h3>
+<p>Посылает импульсы света, анализирует отражения. Показывает распределение затухания по длине линии.</p>
+<h3>Диагностика по симптомам</h3>
+<table>
+<tr><th>Симптом</th><th>Возможная причина</th></tr>
+<tr><td>Нет линка</td><td>Обрыв кабеля, не зарегистрирован ONT, нет питания</td></tr>
+<tr><td>Низкая скорость</td><td>Высокое затухание, потери на сплиттере</td></tr>
+<tr><td>Периодические обрывы</td><td>Плохой контакт, макроизгиб, погодные условия</td></tr>
+<tr><td>Потеря пакетов</td><td>CRC-ошибки, помехи, проблемы с оптикой</td></tr>
+</table>
+<h3>Алгоритм диагностики «нет интернета»</h3>
+<ol>
+<li>Проверить статус ONT и уровень сигнала</li>
+<li>Проверить кабель (оптический / витая пара)</li>
+<li>Проверить роутер (PPPoE-логин, WAN-подключение)</li>
+<li>Проверить DNS</li>
+</ol>
+`,
+ pass:75,
+ questions:[
+  {q:"Какой прибор измеряет уровень оптической мощности?",a:["Мультиметр","Оптический тестер (power meter)","Тестер витой пары","Отвёртка-индикатор"],c:1},
+  {q:"Какой минимально допустимый уровень сигнала на ONT GPON?",a:["−5 дБм","−28 дБм","−40 дБм","+10 дБм"],c:1},
+  {q:"Что показывает рефлектометр (OTDR)?",a:["Только уровень мощности","Распределение затухания по длине линии с локализацией дефектов","Скорость интернета","Наличие напряжения"],c:1},
+  {q:"Какой прибор используют для поиска макроизгибов на коротком отрезке?",a:["OTDR","VFL (визуальный локатор дефектов)","Power meter","Мультиметр"],c:1},
+  {q:"При каком уровне сигнала ONT не сможет зарегистрироваться на OLT?",a:["−15 дБм","−20 дБм","−35 дБм","−8 дБм"],c:2},
+  {q:"Что означает высокий счётчик CRC-ошибок на ONT?",a:["Линия в идеальном состоянии","Проблемы с физическим уровнем: обрывы, затухание, помехи","Нужно перезагрузить роутер","Проблема в DNS"],c:1},
+  {q:"С чего начать диагностику «у абонента нет интернета»?",a:["Перезагрузить компьютер","Проверить статус ONT и уровень сигнала","Заменить роутер","Позвонить в техподдержку"],c:1},
+  {q:"Что нужно зафиксировать при проведении измерений?",a:["Только дату","Уровни сигнала, тип измерения, дату, результаты в наряд","Только температуру","Ничего"],c:1}
+ ]
+},
+{
+ num:8,
+ title:"Работа с абонентом. Стандарты обслуживания",
+ theory:2, practice:0,
+ content:`
+<h3>Внешний вид</h3>
+<ul>
+<li>Опрятная фирменная рабочая форма, бейдж</li>
+<li>Сменная обувь или бахилы для входа в дом</li>
+<li>Никаких следов грязи в доме абонента</li>
+</ul>
+<h3>Приветствие и представление</h3>
+<div class="info-box">
+<strong>Фраза-шаблон:</strong> «Здравствуйте, я монтажник компании [название], пришёл по заявке на подключение интернета». Показать удостоверение.
+</div>
+<h3>Согласование с абонентом</h3>
+<p>До начала работ — согласовать место установки оборудования и маршрут кабеля.</p>
+<h3>Завершение работ</h3>
+<ol>
+<li>Проверка скорости</li>
+<li>Демонстрация работы</li>
+<li>Подписание акта</li>
+<li>Информирование о техподдержке</li>
+</ol>
+<h3>Конфликтные ситуации</h3>
+<div class="warning-box">
+<strong>Алгоритм:</strong> спокойно выслушать → предложить вариант → при невозможности связаться с руководителем.
+</div>
+<h3>Конфиденциальность</h3>
+<p>Не обсуждать других абонентов, не оставлять данные абонента в открытом виде.</p>
+`,
+ pass:75,
+ questions:[
+  {q:"Что нужно сделать первым делом при приходе к абоненту?",a:["Начать сверлить стену","Представиться, показать удостоверение","Попросить чай","Включить перфоратор"],c:1},
+  {q:"Можно ли заходить в уличной обуви в дом абонента?",a:["Да, всегда","Нет, использовать бахилы или сменную обувь","Только если абонент не против","Только в зимний период"],c:1},
+  {q:"Что нужно сделать перед началом монтажа?",a:["Сразу начать прокладку","Согласовать маршрут кабеля и место установки с абонентом","Позвонить руководителю","Составить смету"],c:1},
+  {q:"Что делать при завершении работ?",a:["Быстро уйти","Проверить работоспособность, показать абоненту, подписать акт, сообщить контакты техподдержки","Оставить оборудование и уйти","Только подписать акт без проверки"],c:1},
+  {q:"Что делать, если абонент агрессивен и не пускает в дом?",a:["Насильно войти","Спокойно выяснить причину, связаться с руководителем, при необходимости покинуть объект","Вызвать полицию немедленно","Начать ругаться"],c:1},
+  {q:"Можно ли рассказывать одному абоненту информацию о другом?",a:["Да, если тот не против","Нет, это нарушение конфиденциальности","Да, если это сосед","Только ФИО"],c:1}
+ ]
+},
+{
+ num:9,
+ title:"Документация и отчётность",
+ theory:2, practice:0,
+ content:`
+<h3>Наряд на работу</h3>
+<p>Содержит: адрес, тип работ, оборудование, контакты абонента. Монтажник читает наряд перед выездом.</p>
+<h3>Система учёта (биллинг / CRM)</h3>
+<ul>
+<li>Статус заявки, отметка о выполнении</li>
+<li>Ввод данных: SN ONT, MAC роутера, схема, IP</li>
+<li>Закрытие наряда — обязательный шаг</li>
+</ul>
+<div class="warning-box"><strong>Незакрытый наряд</strong> → заявка остаётся «в работе», биллинг не начинает списывать оплату, наряд зависает.</div>
+<h3>Маркировка</h3>
+<p>Нанесение номеров на кабель в распределительной коробке для идентификации при обслуживании.</p>
+<h3>Фотография объекта</h3>
+<p>Фото распределительной коробки, проложенного кабеля, установленного оборудования.</p>
+<h3>Типовые ошибки в документации</h3>
+<ul>
+<li>Незакрытый наряд → проблемы с биллингом</li>
+<li>Неверный SN ONT → техподдержка не может найти абонента</li>
+<li>Отсутствие фото → нет подтверждения выполненных работ</li>
+</ul>
+`,
+ pass:75,
+ questions:[
+  {q:"Что нужно обязательно указать в системе после подключения абонента?",a:["Только адрес","SN ONT, MAC-адрес роутера, схему подключения, IP-адрес","Только дату","Только ФИО монтажника"],c:1},
+  {q:"Что произойдёт, если не закрыть наряд в системе?",a:["Ничего","Заявка останется «в работе», биллинг не начнёт списывать оплату, наряд зависнет","Абоненту вернут деньги","Система автоматически закроет"],c:1},
+  {q:"Какие фотографии нужно сделать по итогам монтажа?",a:["Селфи с абонентом","Фото распределительной коробки, проложенного кабеля, установленного оборудования","Фото интерьера дома","Фото не требуется"],c:1},
+  {q:"Зачем нужна маркировка кабеля в распределительной коробке?",a:["Для красоты","Для идентификации кабеля при обслуживании и поиске неисправностей","Для абонента","Не нужна"],c:1},
+  {q:"Кто подписывает акт выполненных работ у абонента?",a:["Только монтажник","Абонент (заказчик) и монтажник","Только руководитель","Подпись не нужна"],c:1},
+  {q:"Что делать, если в наряде указан неправильный адрес?",a:["Ехать по указанному","Связаться с руководителем/диспетчером для уточнения","Отменить наряд","Поехать домой"],c:1}
+ ]
+},
+{
+ num:10,
+ title:"Итоговая аттестация",
+ theory:1, practice:1,
+ isExam:true,
+ content:`
+<h3>Итоговая аттестация</h3>
+<p>Этот модуль — финальный экзамен. Он содержит 20 вопросов по всем темам курса. Проходной балл — 80%.</p>
+<div class="info-box">После успешного прохождения экзамена вы получите именной сертификат о прохождении курса.</div>
+`,
+ pass:80,
+ questions:[
+  {q:"При какой высоте работы обязательно применение страховочной привязи?",a:["Более 1 м","Более 1,8 м","Более 2,5 м","Более 3 м"],c:1},
+  {q:"На какой длине волны передаётся сигнал от OLT к ONT (downstream)?",a:["1310 нм","1490 нм","1550 нм","850 нм"],c:1},
+  {q:"Какой цвет имеет коннектор типа SC/APC?",a:["Синий","Зелёный","Бежевый","Красный"],c:1},
+  {q:"Сколько пар в кабеле витой пары категории 5e?",a:["2 пары","4 пары","6 пар","8 пар"],c:1},
+  {q:"По какому параметру ONT регистрируется на OLT?",a:["По IP-адресу","По серийному номеру (SN)","По MAC-адресу","По номеру договора"],c:1},
+  {q:"Какое рекомендуемое расстояние между клипсами при креплении оптического кабеля?",a:["10–15 см","30–50 см","1–2 м","Не регламентируется"],c:1},
+  {q:"Какой минимально допустимый уровень сигнала на ONT GPON?",a:["−5 дБм","−28 дБм","−40 дБм","+10 дБм"],c:1},
+  {q:"Что нужно сделать первым делом при приходе к абоненту?",a:["Начать сверлить стену","Представиться, показать удостоверение","Попросить чай","Включить перфоратор"],c:1},
+  {q:"Что произойдёт, если не закрыть наряд в системе?",a:["Ничего","Заявка останется «в работе», биллинг не начнёт списывать оплату","Абоненту вернут деньги","Система автоматически закроет"],c:1},
+  {q:"Какой инструмент используется для скалывания оптического волокна?",a:["Стриппер","Скалыватель (cleaver)","Кримпер","Мультиметр"],c:1},
+  {q:"Какой номер телефона для вызова экстренных служб?",a:["02","103","112","01"],c:2},
+  {q:"Что означает FTTH?",a:["Fiber To The Home — оптика до дома","Fiber To The Hub — оптика до узла","Fast Transfer To Host","Full Transfer To House"],c:0},
+  {q:"Какой порт на роутере используется для подключения восходящего канала?",a:["LAN1","WAN","USB","Любой"],c:1},
+  {q:"Что НЕЛЬЗЯ делать при воздушной прокладке самонесущего кабеля?",a:["Использовать анкерный зажим","Перегибать кабель через острые углы","Натягивать кабель","Оставлять провес"],c:1},
+  {q:"Какой прибор используют для поиска макроизгибов?",a:["OTDR","VFL (визуальный локатор дефектов)","Power meter","Мультиметр"],c:1},
+  {q:"Какой стандарт обжима чаще используется в России?",a:["T568A","T568B","T568C","T568D"],c:1},
+  {q:"Какое затухание вносит типичный сварной стык?",a:["0,01–0,05 дБ","0,5–1 дБ","3–5 дБ","10 дБ"],c:0},
+  {q:"Что входит в рабочую форму монтажника?",a:["Любая удобная одежда","Сигнальный жилет, фирменная одежда, сменная обувь","Только каска и перчатки","Спортивный костюм"],c:1},
+  {q:"Что нужно сделать при прохождении кабеля через стену дома?",a:["Просто просверлить и продеть","Установить проходную гильзу и уплотнить","Замазать цементом","Оставить открытое отверстие"],c:1},
+  {q:"Какой стандарт шифрования Wi-Fi наиболее актуален?",a:["WEP","WPA","WPA2","WPA3"],c:3}
+ ]
+}
+];
+
+// ============ STATE ============
+let state = {
+  user:null,
+  currentModule:null,
+  currentScreen:'register',
+  moduleResults:{},
+  answers:{}
+};
+
+function loadState(){
+  try{
+    const s = localStorage.getItem('montazhnik_course');
+    if(s){
+      const parsed = JSON.parse(s);
+      state.user = parsed.user||null;
+      state.moduleResults = parsed.moduleResults||{};
+    }
+  }catch(e){}
+}
+function saveState(){
+  localStorage.setItem('montazhnik_course', JSON.stringify({user:state.user, moduleResults:state.moduleResults}));
+}
+function getProgress(){
+  let completed = 0;
+  MODULES.forEach(m=>{ if(state.moduleResults[m.num] && state.moduleResults[m.num].passed) completed++; });
+  return Math.round((completed/MODULES.length)*100);
+}
+function getAvgScore(){
+  let scores = [];
+  MODULES.forEach(m=>{ if(state.moduleResults[m.num]) scores.push(state.moduleResults[m.num].score); });
+  if(!scores.length) return 0;
+  return Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+}
+function isModuleUnlocked(num){
+  if(num===1) return true;
+  return state.moduleResults[num-1] && state.moduleResults[num-1].passed;
+}
+function allCompleted(){
+  return MODULES.every(m=> state.moduleResults[m.num] && state.moduleResults[m.num].passed);
+}
+
+// ============ PWA INSTALL ============
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  showInstallBanner();
+});
+function showInstallBanner(){
+  if(!deferredPrompt) return;
+  const existing = document.getElementById('install-banner');
+  if(existing) return;
+  const header = document.querySelector('.header');
+  if(!header) return;
+  const banner = document.createElement('div');
+  banner.id = 'install-banner';
+  banner.className = 'install-banner';
+  banner.innerHTML = '<span>\uD83D\uDCF1 Установите приложение на телефон для офлайн-доступа</span> <button class="btn btn-green" id="install-btn">Установить</button>';
+  header.parentNode.insertBefore(banner, header);
+  document.getElementById('install-btn').onclick = async () => {
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    banner.remove();
+  };
+}
+
+// ============ RENDER ============
+function render(){
+  const app = document.getElementById('app');
+  if(!state.user){
+    app.innerHTML = renderRegister();
+    attachRegisterEvents();
+    return;
+  }
+  if(state.currentScreen==='certificate' || allCompleted()){
+    app.innerHTML = renderCertificate();
+    attachCertEvents();
+    return;
+  }
+  if(state.currentModule){
+    app.innerHTML = renderModule(state.currentModule);
+    attachModuleEvents();
+    return;
+  }
+  app.innerHTML = renderDashboard();
+  attachDashboardEvents();
+  setTimeout(showInstallBanner, 100);
+}
+
+function renderRegister(){
+  return `
+  <div class="header">
+    <h1>Курс обучения монтажника</h1>
+    <p>Интернет-провайдер · Частный сектор · Оптика и работа на высоте</p>
+  </div>
+  <div class="reg-card">
+    <h2>Регистрация</h2>
+    <p class="sub">Введите ваши данные для начала обучения</p>
+    <div class="form-group">
+      <label>Фамилия</label>
+      <input type="text" id="reg-lastname" placeholder="Иванов" autocomplete="family-name">
+    </div>
+    <div class="form-group">
+      <label>Имя</label>
+      <input type="text" id="reg-firstname" placeholder="Пётр" autocomplete="given-name">
+    </div>
+    <div class="form-group">
+      <label>Отчество</label>
+      <input type="text" id="reg-middlename" placeholder="Сергеевич" autocomplete="additional-name">
+    </div>
+    <button class="btn btn-primary btn-big" id="reg-start">Начать обучение</button>
+  </div>`;
+}
+function attachRegisterEvents(){
+  document.getElementById('reg-start').onclick = ()=>{
+    const ln = document.getElementById('reg-lastname').value.trim();
+    const fn = document.getElementById('reg-firstname').value.trim();
+    const mn = document.getElementById('reg-middlename').value.trim();
+    if(!ln||!fn){ alert('Введите фамилию и имя'); return; }
+    state.user = {lastname:ln, firstname:fn, middlename:mn};
+    saveState();
+    render();
+  };
+}
+
+function renderDashboard(){
+  const progress = getProgress();
+  const completed = MODULES.filter(m=> state.moduleResults[m.num] && state.moduleResults[m.num].passed).length;
+  let html = `
+  <div class="header">
+    <h1>Курс обучения монтажника</h1>
+    <p>Здравствуйте, ${state.user.firstname} ${state.user.middlename ? state.user.middlename : ''}</p>
+    <div class="progress-bar-wrap"><div class="progress-bar" style="width:${progress}%"></div></div>
+    <div class="progress-text">Прогресс: ${progress}% · Пройдено модулей: ${completed} из ${MODULES.length}</div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val">${completed}</div><div class="stat-label">Модулей пройдено</div></div>
+    <div class="stat-card"><div class="stat-val">${getAvgScore()}%</div><div class="stat-label">Средний балл</div></div>
+    <div class="stat-card"><div class="stat-val">${MODULES.length-completed}</div><div class="stat-label">Осталось пройти</div></div>
+  </div>
+  <div class="modules-grid">`;
+  MODULES.forEach(m=>{
+    const res = state.moduleResults[m.num];
+    const unlocked = isModuleUnlocked(m.num);
+    const passed = res && res.passed;
+    let cls = 'module-card';
+    let icon = '';
+    if(passed){ cls += ' completed'; icon = '<span class="check-icon">\u2713</span>'; }
+    else if(unlocked){ cls += ' available'; }
+    else{ cls += ' locked'; icon = '<span class="lock-icon">\uD83D\uDD12</span>'; }
+    html += `<div class="${cls}" data-mod="${m.num}">
+      ${icon}
+      <div class="mod-num">${m.num}</div>
+      <div class="mod-title">${m.title}</div>
+      <div class="mod-info">${m.isExam ? 'Итоговый экзамен · ' : ''}${m.questions.length} вопросов · проходной ${m.pass}%${passed ? ' · '+res.score+'%' : ''}</div>
+    </div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+function attachDashboardEvents(){
+  document.querySelectorAll('.module-card').forEach(card=>{
+    card.onclick = ()=>{
+      const num = parseInt(card.dataset.mod);
+      if(!isModuleUnlocked(num)){
+        alert('Сначала пройдите предыдущий модуль');
+        return;
+      }
+      state.currentModule = num;
+      state.answers = {};
+      render();
+    };
+  });
+}
+
+function renderModule(num){
+  const mod = MODULES.find(m=>m.num===num);
+  const isExam = mod.isExam;
+  let html = `
+  <div class="header">
+    <h1>${isExam ? 'Итоговая аттестация' : 'Модуль '+num}</h1>
+    <p>${mod.title}</p>
+    <div class="progress-bar-wrap"><div class="progress-bar" style="width:${getProgress()}%"></div></div>
+    <div class="progress-text">Общий прогресс: ${getProgress()}%</div>
+  </div>
+  <div class="module-header">
+    <span class="badge">${isExam ? 'Экзамен' : 'Модуль '+num}</span>
+    <h2>${mod.title}</h2>
+    <div class="mod-meta">Теория: ${mod.theory} ч · Практика: ${mod.practice} ч · ${mod.questions.length} вопросов · проходной балл: ${mod.pass}%</div>
+  </div>`;
+  if(!isExam){
+    html += `<div class="content-section">
+      <h3>Теоретический материал</h3>
+      ${mod.content}
+    </div>`;
+  } else {
+    html += `<div class="content-section">${mod.content}</div>`;
+  }
+  html += `<div class="test-container">
+    <h3>${isExam ? 'Экзаменационный тест' : 'Тест по модулю'}</h3>
+    <div class="test-meta">${mod.questions.length} вопросов · Проходной балл: ${mod.pass}% · Выберите один правильный ответ</div>`;
+  mod.questions.forEach((q,qi)=>{
+    html += `<div class="question" data-qi="${qi}">
+      <div class="q-text"><span class="q-num">${qi+1}.</span>${q.q}</div>
+      <div class="answers">`;
+    q.a.forEach((opt,oi)=>{
+      html += `<div class="answer-option" data-qi="${qi}" data-oi="${oi}">
+        <div class="opt-letter">${String.fromCharCode(97+oi)}</div>
+        <div class="opt-text">${opt}</div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+  html += `<div id="test-result" style="display:none"></div>
+    <div class="test-actions">
+      <button class="btn btn-primary" id="submit-test">Проверить ответы</button>
+    </div>
+  </div>`;
+  html += `<div class="nav-buttons">
+    <button class="btn btn-outline" id="back-to-dash">\u2190 К списку модулей</button>
+  </div>`;
+  return html;
+}
+function attachModuleEvents(){
+  document.getElementById('back-to-dash').onclick = ()=>{
+    state.currentModule = null;
+    render();
+  };
+  const answers = {};
+  document.querySelectorAll('.answer-option').forEach(opt=>{
+    opt.onclick = ()=>{
+      const qi = parseInt(opt.dataset.qi);
+      const oi = parseInt(opt.dataset.oi);
+      document.querySelectorAll(`.answer-option[data-qi="${qi}"]`).forEach(o=>o.classList.remove('selected'));
+      opt.classList.add('selected');
+      answers[qi] = oi;
+    };
+  });
+  document.getElementById('submit-test').onclick = ()=>{
+    const mod = MODULES.find(m=>m.num===state.currentModule);
+    let correct = 0;
+    let answered = 0;
+    mod.questions.forEach((q,qi)=>{
+      const sel = answers[qi];
+      if(sel!==undefined){
+        answered++;
+        if(sel===q.c) correct++;
+      }
+    });
+    if(answered < mod.questions.length){
+      if(!confirm('Вы ответили не на все вопросы ('+answered+' из '+mod.questions.length+'). Проверить сейчас?')) return;
+    }
+    mod.questions.forEach((q,qi)=>{
+      const sel = answers[qi];
+      document.querySelectorAll(`.answer-option[data-qi="${qi}"]`).forEach((o,oi)=>{
+        o.classList.add('disabled');
+        o.classList.remove('selected');
+        if(oi===q.c) o.classList.add('correct');
+        else if(oi===sel) o.classList.add('incorrect');
+      });
+    });
+    const score = Math.round((correct/mod.questions.length)*100);
+    const passed = score >= mod.pass;
+    state.moduleResults[mod.num] = {score, passed, correct, total:mod.questions.length};
+    saveState();
+    const resDiv = document.getElementById('test-result');
+    resDiv.style.display = 'block';
+    resDiv.className = 'test-result ' + (passed?'passed':'failed');
+    resDiv.innerHTML = `
+      <div class="score">${score}%</div>
+      <div class="verdict">${passed?'\u2713 Тест пройден!':'\u2717 Тест не пройден'}</div>
+      <div>Правильных ответов: ${correct} из ${mod.questions.length}</div>
+      <div style="margin-top:8px">Проходной балл: ${mod.pass}%</div>
+    `;
+    const actionsDiv = document.querySelector('.test-actions');
+    if(passed){
+      const isLast = mod.num === MODULES.length;
+      if(isLast){
+        actionsDiv.innerHTML = `<button class="btn btn-green" id="go-cert">Получить сертификат \uD83C\uDF93</button>`;
+      } else {
+        actionsDiv.innerHTML = `<button class="btn btn-green" id="next-module">Следующий модуль \u2192</button>`;
+      }
+    } else {
+      actionsDiv.innerHTML = `<button class="btn btn-primary" id="retry-test">Пройти заново</button>`;
+    }
+    if(passed){
+      const nextBtn = document.getElementById('next-module');
+      const certBtn = document.getElementById('go-cert');
+      if(nextBtn) nextBtn.onclick = ()=>{ state.currentModule = mod.num+1; state.answers={}; render(); };
+      if(certBtn) certBtn.onclick = ()=>{ state.currentModule = null; state.currentScreen = 'certificate'; render(); };
+    } else {
+      document.getElementById('retry-test').onclick = ()=>{ state.answers={}; render(); };
+    }
+    resDiv.scrollIntoView({behavior:'smooth',block:'center'});
+  };
+}
+
+function renderCertificate(){
+  const fullName = [state.user.lastname, state.user.firstname, state.user.middlename].filter(Boolean).join(' ');
+  const date = new Date().toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
+  const avg = getAvgScore();
+  return `
+  <div class="certificate-screen">
+    <div class="certificate">
+      <div class="seal">Курс<br>пройден</div>
+      <div class="cert-title">Сертификат</div>
+      <h2>об успешном прохождении курса</h2>
+      <div class="cert-body">
+        Настоящим сертификатом подтверждается, что
+        <div class="cert-name">${fullName}</div>
+        успешно прошёл(ла) курс обучения
+        <div class="cert-course">«Монтажник линий связи интернет-провайдера»</div>
+        <div class="cert-score">Средний балл по всем модулям: <strong>${avg}%</strong></div>
+        <div class="cert-date">Дата прохождения: ${date}</div>
+      </div>
+      <div class="signatures">
+        <div class="sig-block">
+          <div class="sig-line"></div>
+          <div class="sig-label">Подпись наставника</div>
+        </div>
+        <div class="sig-block">
+          <div class="sig-line"></div>
+          <div class="sig-label">Подпись руководителя</div>
+        </div>
+      </div>
+    </div>
+    <div class="cert-actions">
+      <button class="btn btn-primary" onclick="window.print()">\uD83D\uDCC4 Скачать PDF / Печать</button>
+      <button class="btn btn-outline" id="back-to-dash-cert">\u2190 К списку модулей</button>
+      <button class="btn btn-outline" id="reset-course">Начать заново</button>
+    </div>
+  </div>`;
+}
+function attachCertEvents(){
+  const b = document.getElementById('back-to-dash-cert');
+  if(b) b.onclick = ()=>{ state.currentScreen = 'dashboard'; state.currentModule = null; render(); };
+  const r = document.getElementById('reset-course');
+  if(r) r.onclick = ()=>{
+    if(confirm('Сбросить весь прогресс и начать заново?')){
+      localStorage.removeItem('montazhnik_course');
+      state = {user:null, currentModule:null, currentScreen:'register', moduleResults:{}, answers:{}};
+      render();
+    }
+  };
+}
+
+// ============ SERVICE WORKER ============
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+
+// Init
+loadState();
+render();
+</script>
+</body>
+</html>
